@@ -9,8 +9,14 @@ public class CameraLerper : MonoBehaviour
     [SerializeField] private float lerpDistance;
     [SerializeField] private bool timeDriven;
 
+    private void Start()
+    {
+        currentScreenData = trackingTarget.GetComponent<ScreenData>();
+    }
+
     public void SetMyScreen(GameObject currentScreen)
     {
+        Debug.Log("Moving Screen");
         trackingTarget = currentScreen;
         currentScreenData = trackingTarget.GetComponent<ScreenData>();
     }
@@ -20,6 +26,10 @@ public class CameraLerper : MonoBehaviour
         if (currentScreenData.halfSizeScreen)
         {
             Camera.main.orthographicSize = Mathf.Lerp(Camera.main.orthographicSize, 2.5f, lerpDistance * (timeDriven ? Time.deltaTime : 1));
+        }
+        else if (currentScreenData.doubleSizeScreen)
+        {
+            Camera.main.orthographicSize = Mathf.Lerp(Camera.main.orthographicSize, 10f, lerpDistance * (timeDriven ? Time.deltaTime : 1));
         }
         else
         {

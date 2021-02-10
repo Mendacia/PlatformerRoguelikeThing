@@ -16,7 +16,6 @@ public class PlayerControls : MonoBehaviour
     private float yIntent;
     private Vector2 wantedDirection;
     private bool jumpBool = false;
-    private bool hasDoubleJumped = false;
     private List<GameObject> screens = new List<GameObject>();
 
     [SerializeField] private CameraLerper screenTransitionScript;
@@ -33,18 +32,15 @@ public class PlayerControls : MonoBehaviour
         myRigidbody = GetComponent<Rigidbody2D>();
     }
 
-    private void OnTriggerEnter2D(Collider2D collision)
+    public void addScreenToTheList(GameObject screen, bool toAdd)
     {
-        if (collision.gameObject.tag == "Screen")
+        if (toAdd)
         {
-            screens.Add(collision.gameObject);
+            screens.Add(screen);
         }
-    }
-    private void OnTriggerExit2D(Collider2D other)
-    {
-        if (other.gameObject.tag == "Screen")
+        else
         {
-            screens.Remove(other.gameObject);
+            screens.Remove(screen);
         }
     }
 
@@ -69,7 +65,7 @@ public class PlayerControls : MonoBehaviour
 
         //Player Speed Cap
 
-        if (screens.Count == 2)
+        if (screens.Count == 1)
         {
             screenTransitionScript.SetMyScreen(screens[0]);
         }
@@ -80,7 +76,6 @@ public class PlayerControls : MonoBehaviour
         if (shouldBeGrounded)
         {
             currentState = playerState.GROUNDED;
-            hasDoubleJumped = false;
         }
         else
         {
@@ -127,11 +122,6 @@ public class PlayerControls : MonoBehaviour
         if (Input.GetKey(KeyCode.A) && !(xIntent < -playerWalkMaxSpeed))
         {
             xIntent -= playerJumpLRAcceleration;
-        }
-        if (Input.GetKeyDown(KeyCode.Space) && hasDoubleJumped == false)
-        {
-            jumpBool = true;
-            hasDoubleJumped = true;
         }
     }
 

@@ -9,12 +9,19 @@ public class PlayerWeaponSwing : MonoBehaviour
     private Vector2 wantedDirection;
     private Rigidbody2D myRigidbody;
     private bool isSwinging = false;
+    private float defaultGravityScale;
+    private Transform spinner;
+    private Animator weaponFX;
 
     [SerializeField] private float dashForce = 50;
 
-    void Start()
+    void Awake()
     {
         myRigidbody = gameObject.GetComponent<Rigidbody2D>();
+        defaultGravityScale = myRigidbody.gravityScale;
+        spinner = transform.Find("SwingSpinner");
+        weaponFX = GameObject.Find("Weapon").GetComponent<Animator>();
+        weaponFX.GetComponent<Collider2D>().enabled = false;
     }
     void Update()
     {
@@ -51,11 +58,54 @@ public class PlayerWeaponSwing : MonoBehaviour
     {
         if (isSwinging)
         {
-            Debug.Log(xIntent + ", " + yIntent);
+            StartCoroutine(AttackRunning());
             myRigidbody.velocity = Vector2.zero;
             myRigidbody.velocity = (wantedDirection * dashForce);
+            rotateTheSpinnerAndRunTheAnimation();
             isSwinging = false;
-            Debug.Log("Swung");
         }
+    }
+
+    void rotateTheSpinnerAndRunTheAnimation()
+    {
+        var myAngle = 0f;
+        switch (xIntent)
+        {
+            case 1:
+                {
+                    myAngle = 45 * yIntent;
+                    break;
+                }
+            case 0:
+                {
+                    myAngle = 90 * yIntent;
+                    break;
+                }
+            case -1:
+                {
+                    if (yIntent != 0)
+                    {
+                        myAngle = 135 * yIntent;
+                    }
+                    else
+                    {
+                        myAngle = 180;
+                    }
+                    break;
+                }
+        }
+        spinner.rotation = Quaternion.AngleAxis(myAngle, Vector3.forward);
+        weaponFX.SetTrigger("dashAttack");
+    }
+
+    IEnumerator AttackRunning()
+    {
+        myRigidbody.gravityScale = 0;
+        myRigidbody.drag = 10f;
+        weaponFX.GetComponent<Collider2D>().enabled = true;
+        yield return new WaitForSecondsRealtime(1 / 6f);
+        weaponFX.GetComponent<Collider2D>().enabled = false;
+        myRigidbody.drag = 0;
+        myRigidbody.gravityScale = defaultGravityScale;
     }
 }
