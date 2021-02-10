@@ -38,7 +38,6 @@ public class PlayerControls : MonoBehaviour
         if (collision.gameObject.tag == "Screen")
         {
             screens.Add(collision.gameObject);
-            Debug.Log("Added " + collision.name);
         }
     }
     private void OnTriggerExit2D(Collider2D other)
@@ -46,15 +45,11 @@ public class PlayerControls : MonoBehaviour
         if (other.gameObject.tag == "Screen")
         {
             screens.Remove(other.gameObject);
-            Debug.Log("Removed " + other.name);
         }
     }
 
     void Update()
     {
-
-        Debug.Log(screens);
-
         xIntent = myRigidbody.velocity.x;
         yIntent = myRigidbody.velocity.y;
 
@@ -73,14 +68,6 @@ public class PlayerControls : MonoBehaviour
         }
 
         //Player Speed Cap
-        if(xIntent > playerWalkMaxSpeed)
-        {
-            xIntent = playerWalkMaxSpeed;
-        }
-        if(xIntent < -playerWalkMaxSpeed)
-        {
-            xIntent = -playerWalkMaxSpeed;
-        }
 
         if (screens.Count == 2)
         {
@@ -116,6 +103,15 @@ public class PlayerControls : MonoBehaviour
             jumpBool = true;
         }
 
+        if (xIntent > playerWalkMaxSpeed)
+        {
+            xIntent = playerWalkMaxSpeed;
+        }
+        if (xIntent < -playerWalkMaxSpeed)
+        {
+            xIntent = -playerWalkMaxSpeed;
+        }
+
         if (!(Input.GetKey(KeyCode.D)) && !(Input.GetKey(KeyCode.A)))
         {
             xIntent = 0;
@@ -124,11 +120,11 @@ public class PlayerControls : MonoBehaviour
 
     private void AirborneUpdate()
     {
-        if (Input.GetKey(KeyCode.D))
+        if (Input.GetKey(KeyCode.D) && !(xIntent > playerWalkMaxSpeed))
         {
             xIntent += playerJumpLRAcceleration;
         }
-        if (Input.GetKey(KeyCode.A))
+        if (Input.GetKey(KeyCode.A) && !(xIntent < -playerWalkMaxSpeed))
         {
             xIntent -= playerJumpLRAcceleration;
         }
