@@ -4,13 +4,7 @@ using UnityEngine;
 
 public class PlayerGroundFinder : MonoBehaviour
 {
-    private bool foundGround;
     [SerializeField] private PlayerControls player;
-
-    private void Update()
-    {
-        foundGround = false;
-    }
 
     private void OnTriggerStay2D(Collider2D collision)
     {
