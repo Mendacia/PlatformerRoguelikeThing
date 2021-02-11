@@ -8,6 +8,29 @@ public class ScreenData : MonoBehaviour
 
     public bool halfSizeScreen = false;
     public bool doubleSizeScreen = false;
+    public bool scrollingScreenWE = false;
+    public bool scrollingScreenNS = false;
+
+    //Anchors for scrolling screens, will be null if the screen does not scroll
+    [System.NonSerialized] public GameObject westmostAnchor = null;
+    [System.NonSerialized] public GameObject eastmostAnchor = null;
+    [System.NonSerialized] public GameObject northmostAnchor = null;
+    [System.NonSerialized] public GameObject southmostAnchor = null;
+
+    void Start()
+    {
+        if (scrollingScreenWE)
+        {
+            westmostAnchor = transform.Find("Westmost Anchor").gameObject;
+            eastmostAnchor = transform.Find("Eastmost Anchor").gameObject;
+        }
+
+        if (scrollingScreenNS)
+        {
+            northmostAnchor = transform.Find("Northmost Anchor").gameObject;
+            southmostAnchor = transform.Find("Southmost Anchor").gameObject;
+        }
+    }
 
     private void OnTriggerEnter2D(Collider2D collision)
     {

@@ -23,6 +23,12 @@ public class PlayerControls : MonoBehaviour
 
     [SerializeField] private CameraLerper screenTransitionScript;
 
+    //Wall Jump Handling
+    [SerializeField] private bool wallJumpUnlocked = false;
+    [System.NonSerialized] public bool canWallJump = false;
+    [System.NonSerialized] public bool wallOnRight = true;
+    private bool wallJumpBool = false;
+
     [Header("Movement Values")]
     [SerializeField] private float playerWalkMaxSpeed = 5;
     [SerializeField] private float playerWalkAcceleration = 0.5f;
@@ -128,6 +134,22 @@ public class PlayerControls : MonoBehaviour
         {
             xIntent -= playerJumpLRAcceleration;
         }
+
+        //Wall Jump Segment
+        if (wallJumpUnlocked)
+        {
+            if(canWallJump)
+            {
+                if (Input.GetKeyDown(KeyCode.Space))
+                {
+                    wallJumpBool = true;
+                }
+            }
+            else
+            {
+                gameObject.GetComponent<BoxCollider2D>().sharedMaterial = null;
+            }
+        }
     }
 
     private void FixedUpdate()
@@ -136,6 +158,20 @@ public class PlayerControls : MonoBehaviour
         {
             yIntent = playerJumpHeight;
             jumpBool = false;
+        }
+
+        if (wallJumpBool)
+        {
+            yIntent = playerJumpHeight;
+            if (wallOnRight)
+            {
+                xIntent = -playerWalkMaxSpeed;
+            }
+            else
+            {
+                xIntent = playerWalkMaxSpeed;
+            }
+            wallJumpBool = false;
         }
         wantedDirection = new Vector2(xIntent, yIntent);
         myRigidbody.velocity = wantedDirection;
