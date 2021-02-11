@@ -40,8 +40,19 @@ public class CameraLerper : MonoBehaviour
         }
         else if (currentScreenData.scrollingScreenWE) //Used if the screen should scroll Left and Right
         {
-            //Sets the camera to normal size
-            Camera.main.orthographicSize = Mathf.Lerp(Camera.main.orthographicSize, 5f, lerpDistance * (timeDriven ? Time.deltaTime : 1));
+            //Sets the camera to designated size
+            if (currentScreenData.halfSizeScreen) //Used in a small screen
+            {
+                Camera.main.orthographicSize = Mathf.Lerp(Camera.main.orthographicSize, 2.5f, lerpDistance * (timeDriven ? Time.deltaTime : 1));
+            }
+            else if (currentScreenData.doubleSizeScreen) //Used in a large screen
+            {
+                Camera.main.orthographicSize = Mathf.Lerp(Camera.main.orthographicSize, 10f, lerpDistance * (timeDriven ? Time.deltaTime : 1));
+            }
+            else //Used in a regular screen
+            {
+                Camera.main.orthographicSize = Mathf.Lerp(Camera.main.orthographicSize, 5f, lerpDistance * (timeDriven ? Time.deltaTime : 1));
+            }
 
             var transformLimitWest = currentScreenData.westmostAnchor.transform.position.x;
             var transformLimitEast = currentScreenData.eastmostAnchor.transform.position.x;
@@ -57,6 +68,39 @@ public class CameraLerper : MonoBehaviour
             else if (player.position.x > transformLimitEast)
             {
                 gameObject.transform.position = Vector3.Lerp(gameObject.transform.position, new Vector3(transformLimitEast, trackingTarget.transform.position.y, -10), lerpDistance * (timeDriven ? Time.deltaTime : 1));
+            }
+
+        }
+        else if (currentScreenData.scrollingScreenNS) //Used if the screen should scroll Up and Down
+        {
+            //Sets the camera to designated size
+            if (currentScreenData.halfSizeScreen) //Used in a small screen
+            {
+                Camera.main.orthographicSize = Mathf.Lerp(Camera.main.orthographicSize, 2.5f, lerpDistance * (timeDriven ? Time.deltaTime : 1));
+            }
+            else if (currentScreenData.doubleSizeScreen) //Used in a large screen
+            {
+                Camera.main.orthographicSize = Mathf.Lerp(Camera.main.orthographicSize, 10f, lerpDistance * (timeDriven ? Time.deltaTime : 1));
+            }
+            else //Used in a regular screen
+            {
+                Camera.main.orthographicSize = Mathf.Lerp(Camera.main.orthographicSize, 5f, lerpDistance * (timeDriven ? Time.deltaTime : 1));
+            }
+
+            var transformLimitNorth = currentScreenData.northmostAnchor.transform.position.y;
+            var transformLimitSouth = currentScreenData.southmostAnchor.transform.position.y;
+
+            if (player.position.y < transformLimitNorth && player.position.y > transformLimitSouth)
+            {
+                gameObject.transform.position = Vector3.Lerp(gameObject.transform.position, new Vector3(trackingTarget.transform.position.x, player.position.y, -10), lerpDistance * (timeDriven ? Time.deltaTime : 1));
+            }
+            else if (player.position.y > transformLimitNorth)
+            {
+                gameObject.transform.position = Vector3.Lerp(gameObject.transform.position, new Vector3(trackingTarget.transform.position.x, transformLimitNorth, -10), lerpDistance * (timeDriven ? Time.deltaTime : 1));
+            }
+            else if (player.position.y < transformLimitSouth)
+            {
+                gameObject.transform.position = Vector3.Lerp(gameObject.transform.position, new Vector3(trackingTarget.transform.position.x, transformLimitSouth, -10), lerpDistance * (timeDriven ? Time.deltaTime : 1));
             }
 
         }
