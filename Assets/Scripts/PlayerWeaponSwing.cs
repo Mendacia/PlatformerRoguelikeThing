@@ -12,11 +12,13 @@ public class PlayerWeaponSwing : MonoBehaviour
     private float defaultGravityScale;
     private Transform spinner;
     private Animator weaponFX;
+    private PlayerControls playerControllerScript;
 
     [SerializeField] private float dashForce = 50;
 
     void Awake()
     {
+        playerControllerScript = gameObject.GetComponent<PlayerControls>();
         myRigidbody = gameObject.GetComponent<Rigidbody2D>();
         defaultGravityScale = myRigidbody.gravityScale;
         spinner = transform.Find("SwingSpinner");
@@ -48,7 +50,7 @@ public class PlayerWeaponSwing : MonoBehaviour
         wantedDirection = new Vector2(xIntent, yIntent);
 
         //taking inputs
-        if (Input.GetKeyDown(KeyCode.LeftShift) && isSwinging == false)
+        if (Input.GetKeyDown(KeyCode.LeftShift) && isSwinging == false && playerControllerScript.canSwingWeapon)
         {
             isSwinging = true;
         }
@@ -61,6 +63,7 @@ public class PlayerWeaponSwing : MonoBehaviour
             StartCoroutine(AttackRunning());
             myRigidbody.velocity = Vector2.zero;
             myRigidbody.velocity = (wantedDirection * dashForce);
+            playerControllerScript.canSwingWeapon = false;
             rotateTheSpinnerAndRunTheAnimation();
             isSwinging = false;
         }

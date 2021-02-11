@@ -16,7 +16,6 @@ public class CameraLerper : MonoBehaviour
 
     public void SetMyScreen(GameObject currentScreen)
     {
-        Debug.Log("Moving Screen");
         trackingTarget = currentScreen;
         currentScreenData = trackingTarget.GetComponent<ScreenData>();
     }

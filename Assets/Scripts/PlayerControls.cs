@@ -18,6 +18,9 @@ public class PlayerControls : MonoBehaviour
     private bool jumpBool = false;
     private List<GameObject> screens = new List<GameObject>();
 
+    //Weapon Handling
+    [System.NonSerialized] public bool canSwingWeapon = true;
+
     [SerializeField] private CameraLerper screenTransitionScript;
 
     [Header("Movement Values")]
@@ -85,6 +88,8 @@ public class PlayerControls : MonoBehaviour
 
     private void GroundedUpdate()
     {
+        canSwingWeapon = true;
+
         if (Input.GetKey(KeyCode.D))
         {
             xIntent += playerWalkAcceleration;
