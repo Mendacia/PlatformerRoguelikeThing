@@ -6,6 +6,7 @@ public class TempKillGuy : MonoBehaviour
 {
     [SerializeField]private Animator myAnimator;
     private bool isAlive = true;
+    [System.NonSerialized] public bool hasDiedBefore = false;
 
     void Start()
     {
@@ -26,6 +27,7 @@ public class TempKillGuy : MonoBehaviour
         if(other.tag == "Weapon" && isAlive)
         {
             Debug.Log("I have been slain!");
+            hasDiedBefore = true;
             myAnimator.SetTrigger("Died");
             isAlive = false;
             GameObject.Find("Player (Root)").GetComponent<PlayerControls>().canSwingWeapon = true;

@@ -50,7 +50,7 @@ public class PlayerWeaponSwing : MonoBehaviour
         wantedDirection = new Vector2(xIntent, yIntent);
 
         //taking inputs
-        if (Input.GetKeyDown(KeyCode.LeftShift) && isSwinging == false && playerControllerScript.canSwingWeapon)
+        if (Input.GetKeyDown(KeyCode.LeftShift) && isSwinging == false && playerControllerScript.canSwingWeapon || Input.GetKeyDown(KeyCode.K) && isSwinging == false && playerControllerScript.canSwingWeapon)
         {
             isSwinging = true;
         }
