@@ -9,11 +9,11 @@ public class PlayerWallFinder : MonoBehaviour
 
     void Update()
     {
-        var leftWallDirectionFinderRaycast = Physics2D.Raycast(transform.position, Vector2.left, 0.15f, wallFinderMask);
-        var rightWallDirectionFinderRaycast = Physics2D.Raycast(transform.position, Vector2.right, 0.15f, wallFinderMask);
+        var leftWallDirectionFinderRaycast = Physics2D.Raycast(transform.position, Vector2.left, 0.25f, wallFinderMask);
+        var rightWallDirectionFinderRaycast = Physics2D.Raycast(transform.position, Vector2.right, 0.25f, wallFinderMask);
 
-        Debug.DrawRay(transform.position, Vector2.left * 0.15f, Color.green);
-        Debug.DrawRay(transform.position, Vector2.right * 0.15f, Color.red);
+        Debug.DrawRay(transform.position, Vector2.left * 0.25f, Color.green);
+        Debug.DrawRay(transform.position, Vector2.right * 0.25f, Color.red);
 
 
         if (leftWallDirectionFinderRaycast.collider == null)

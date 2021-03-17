@@ -12,11 +12,14 @@ public class PlayerControls : MonoBehaviour
     private playerState currentState = playerState.AIRBORNE;
 
     private Rigidbody2D myRigidbody;
+    [SerializeField] private Animator myAnimator;
     private float xIntent;
     private float yIntent;
     private Vector2 wantedDirection;
     private bool jumpBool = false;
     private List<GameObject> screens = new List<GameObject>();
+    private float lastFrameXIntent;
+    [SerializeField] private Transform playerVisuals;
 
     //Weapon Handling
     [System.NonSerialized] public bool canSwingWeapon = true;
@@ -60,18 +63,22 @@ public class PlayerControls : MonoBehaviour
 
     void Update()
     {
+        lastFrameXIntent = xIntent;
         xIntent = myRigidbody.velocity.x;
         yIntent = myRigidbody.velocity.y;
+        myAnimator.SetBool("isMoving", false);
 
         switch (currentState)
         {
             case playerState.GROUNDED:
                 {
+                    myAnimator.SetBool("grounded", true);
                     GroundedUpdate();
                     break;
                 }
             case playerState.AIRBORNE:
                 {
+                    myAnimator.SetBool("grounded", false);
                     AirborneUpdate();
                     break;
                 }
@@ -82,6 +89,11 @@ public class PlayerControls : MonoBehaviour
         if (screens.Count == 1)
         {
             screenTransitionScript.SetMyScreen(screens[0]);
+        }
+
+        if (lastFrameXIntent - 2 * playerWalkMaxSpeed == xIntent || lastFrameXIntent + 2 * playerWalkMaxSpeed == xIntent)
+        {
+            myAnimator.SetTrigger("turned");
         }
     }
 
@@ -104,10 +116,14 @@ public class PlayerControls : MonoBehaviour
 
         if (Input.GetKey(KeyCode.D))
         {
+            myAnimator.SetBool("isMoving", true);
+            playerVisuals.localEulerAngles = new Vector3(0, 0, 0);
             xIntent += playerWalkAcceleration;
         }
         if (Input.GetKey(KeyCode.A))
         {
+            myAnimator.SetBool("isMoving", true);
+            playerVisuals.localEulerAngles = new Vector3(0, 180, 0);
             xIntent -= playerWalkAcceleration;
         }
         if (Input.GetKeyDown(KeyCode.Space))
@@ -134,10 +150,14 @@ public class PlayerControls : MonoBehaviour
     {
         if (Input.GetKey(KeyCode.D) && !(xIntent > playerWalkMaxSpeed))
         {
+            myAnimator.SetBool("isMoving", true);
+            playerVisuals.localEulerAngles = new Vector3(0, 0, 0);
             xIntent += playerJumpLRAcceleration;
         }
         if (Input.GetKey(KeyCode.A) && !(xIntent < -playerWalkMaxSpeed))
         {
+            myAnimator.SetBool("isMoving", true);
+            playerVisuals.localEulerAngles = new Vector3(0, 180, 0);
             xIntent -= playerJumpLRAcceleration;
         }
 
@@ -169,6 +189,7 @@ public class PlayerControls : MonoBehaviour
     {
         if (jumpBool)
         {
+            myAnimator.SetTrigger("jump");
             yIntent = playerJumpHeight;
             jumpBool = false;
         }
